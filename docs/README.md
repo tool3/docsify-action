@@ -43,3 +43,7 @@ jobs:
       with:
         github_token: ${{ secrets.GP_TOKEN }}
 ```
+
+# Github Pages
+instruct `github pages` to serve docs from `master` docs directory through your repository settings.   
+Now you have self updating docs !
