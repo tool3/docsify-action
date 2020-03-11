@@ -1,0 +1,30 @@
+name: release
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: tool3/bump@master
+        with:
+          github_token: ${{ secrets.GP_TOKEN }}
+          unrelated: true
+
+  publish:
+    needs: tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: tool3/publisher@master
+        with:
+          npm_token: ${{secrets.NPM_TOKEN}}
+          github_token: ${{secrets.GP_TOKEN}}
+          scope: "@tool3"
+      - run: | 
+          npm ci
+          git pull origin master --tags

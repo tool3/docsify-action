@@ -1,0 +1,19 @@
+name: 'publisher-action'
+description: 'publish to npm and github registries'
+author: 'Tal Hayut'
+inputs:
+  scope:  
+    description: 'package user scope'
+    required: false
+  github_token:  
+    description: 'github access token'
+    required: true
+  npm_token:  
+    description: 'npm private token'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'package'
+  color: 'blue'
