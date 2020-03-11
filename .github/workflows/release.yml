@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: tool3/publisher@master
+      - uses: tool3/docsify-action@master
         with:
           npm_token: ${{secrets.NPM_TOKEN}}
           github_token: ${{secrets.GP_TOKEN}}

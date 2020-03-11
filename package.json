@@ -1,6 +1,6 @@
 {
-  "name": "publisher",
-  "version": "1.0.62",
+  "name": "docsify-action",
+  "version": "1.0.0",
   "description": "publish to npm/github registries",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+git@github.com:tool3/publisher.git"
+    "url": "git+git@github.com:tool3/docsify-action.git"
   },
   "keywords": [
     "github-action",
@@ -21,9 +21,9 @@
   "author": "Tal Hayut",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tool3/publisher/issues"
+    "url": "https://github.com/tool3/docsify-action/issues"
   },
-  "homepage": "https://github.com/tool3/publisher#readme",
+  "homepage": "https://github.com/tool3/docsify-action",
   "dependencies": {
     "@actions/core": "^1.1.1",
     "@actions/exec": "^1.0.2"

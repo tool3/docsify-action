@@ -1,66 +1,32 @@
-const { exec } = require('@actions/exec');
 const core = require('@actions/core');
-const fs = require('fs');
-const os = require('os');
-const util = require('util');
-const write = util.promisify(fs.writeFile);
+const github = require('@actions/github');
+const { exec } = require('@actions/exec');
 
 async function run() {
   try {
-    const scope = core.getInput('scope');
-    let sanitizedScope = scope && (scope.includes('@') ? scope : `@${scope}`)
-    
-    const npmrc = `${os.homedir()}/.npmrc`
-    const packageJson = require(`${process.cwd()}/package.json`);
-    const packageName = packageJson.name;
-    const scopedPackage = packageName.includes('@');
+    const { pusher: { email, name } } = github.context.payload;
 
-    const registries = {
-      github: {
-        url: `npm.pkg.github.com`,
-        token: core.getInput('github_token'),
-        scopeAnyWay: true
-      },
-      npm: {
-        url: 'registry.npmjs.org',
-        token: core.getInput('npm_token'),
-        scopeAnyWay: false
-      }
-    };
+    // get input
+    const destinationDir = core.getInput('dir');
+    const docsifyArgs = core.getInput('docsify_args');
+    const commitMsg = core.getInput('commit_msg');
+    const destBranch = core.getInput('branch');
 
-    if (scopedPackage) {
-      sanitizedScope = packageName.split('/')[0];
+    const docsArgs = ['docsify-cli', 'init', destinationDir];
+
+    if (docsifyArgs) {
+      docsArgs.push(docsifyArgs);
     }
 
-    core.info(`using scope: ${scope}`);
-
-    await Object.keys(registries).reduce(async (promise, registry) => {
-      const { url, token, scopeAnyWay } = registries[registry];
-
-      await promise;
-
-      core.startGroup(`Publishing to ${registry}`);
-
-      // create a local .npmrc file
-      await write(npmrc, `//${url}/:_authToken=${token}`);
-
-      // get latest tags
-      await exec('git', ['pull', 'origin', 'master', '--tags']);
-
-      // configure npm and publish
-      await exec('npm', ['config', 'set', 'registry', scopeAnyWay ? `https://${url}/${sanitizedScope}` : `https://${url}`]);
-
-      const publishArgs = ['publish'];
-      if (scopedPackage || scopeAnyWay) {
-        publishArgs.push(`--scope=${sanitizedScope}`);
-      }
-
-      await exec('npm', publishArgs);
-
-      core.info(`Successfully published to ${registry} !`);
-      core.endGroup(`Publishing to ${registry}`)
-
-    }, Promise.resolve());
+    // generate docs
+    await exec('npx', docsArgs);
+    
+    // push dist
+    await exec('git', ['config', '--local', 'user.name', name]);
+    await exec('git', ['config', '--local', 'user.email', email]);
+    await exec('git', ['add', '.']);
+    await exec('git', ['commit', '-a', '-m',  commitMsg]);
+    await exec('git', ['push', 'origin', `HEAD:${destBranch}`]);
 
   } catch (error) {
     core.setFailed(`Failed to publish ${error.message}`);

@@ -944,69 +944,35 @@ module.exports = require("os");
 /***/ 104:
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
-const { exec } = __webpack_require__(986);
 const core = __webpack_require__(470);
-const fs = __webpack_require__(747);
-const os = __webpack_require__(87);
-const util = __webpack_require__(669);
-const write = util.promisify(fs.writeFile);
+const github = __webpack_require__(690);
+const { exec } = __webpack_require__(986);
 
 async function run() {
   try {
-    const scope = core.getInput('scope');
-    let sanitizedScope = scope && (scope.includes('@') ? scope : `@${scope}`)
-    
-    const npmrc = `${os.homedir()}/.npmrc`
-    const packageJson = __webpack_require__(731);
-    const packageName = packageJson.name;
-    const scopedPackage = packageName.includes('@');
+    const { pusher: { email, name } } = github.context.payload;
 
-    const registries = {
-      github: {
-        url: `npm.pkg.github.com`,
-        token: core.getInput('github_token'),
-        scopeAnyWay: true
-      },
-      npm: {
-        url: 'registry.npmjs.org',
-        token: core.getInput('npm_token'),
-        scopeAnyWay: false
-      }
-    };
+    // get input
+    const destinationDir = core.getInput('dir');
+    const docsifyArgs = core.getInput('docsify_args');
+    const commitMsg = core.getInput('commit_msg');
+    const destBranch = core.getInput('branch');
 
-    if (scopedPackage) {
-      sanitizedScope = packageName.split('/')[0];
+    const docsArgs = ['docsify-cli', 'init', destinationDir];
+
+    if (docsifyArgs) {
+      docsArgs.push(docsifyArgs);
     }
 
-    core.info(`using scope: ${scope}`);
-
-    await Object.keys(registries).reduce(async (promise, registry) => {
-      const { url, token, scopeAnyWay } = registries[registry];
-
-      await promise;
-
-      core.startGroup(`Publishing to ${registry}`);
-
-      // create a local .npmrc file
-      await write(npmrc, `//${url}/:_authToken=${token}`);
-
-      // get latest tags
-      await exec('git', ['pull', 'origin', 'master', '--tags']);
-
-      // configure npm and publish
-      await exec('npm', ['config', 'set', 'registry', scopeAnyWay ? `https://${url}/${sanitizedScope}` : `https://${url}`]);
-
-      const publishArgs = ['publish'];
-      if (scopedPackage || scopeAnyWay) {
-        publishArgs.push(`--scope=${sanitizedScope}`);
-      }
-
-      await exec('npm', publishArgs);
-
-      core.info(`Successfully published to ${registry} !`);
-      core.endGroup(`Publishing to ${registry}`)
-
-    }, Promise.resolve());
+    // generate docs
+    await exec('npx', docsArgs);
+    
+    // push dist
+    await exec('git', ['config', '--local', 'user.name', name]);
+    await exec('git', ['config', '--local', 'user.email', email]);
+    await exec('git', ['add', '.']);
+    await exec('git', ['commit', '-a', '-m',  commitMsg]);
+    await exec('git', ['push', 'origin', `HEAD:${destBranch}`]);
 
   } catch (error) {
     core.setFailed(`Failed to publish ${error.message}`);
@@ -1556,10 +1522,11 @@ function isUnixExecutable(stats) {
 
 /***/ }),
 
-/***/ 731:
-/***/ (function(module) {
+/***/ 690:
+/***/ (function() {
 
-module.exports = {"name":"publisher","version":"1.0.60","description":"publish to npm/github registries","main":"index.js","scripts":{"lint":"eslint index.js","package":"ncc build index.js -o dist","test":"eslint index.js && jest","build":"ncc build index.js"},"repository":{"type":"git","url":"git+git@github.com:tool3/publisher.git"},"keywords":["github-action","publish","javascript"],"author":"Tal Hayut","license":"MIT","bugs":{"url":"https://github.com/tool3/publisher/issues"},"homepage":"https://github.com/tool3/publisher#readme","dependencies":{"@actions/core":"^1.1.1","@actions/exec":"^1.0.2"},"devDependencies":{"@zeit/ncc":"^0.20.5","eslint":"^6.3.0","husky":"^3.1.0","jest":"^25.1.0"},"husky":{"hooks":{"pre-commit":"npm run build && git add ."}}};
+eval("require")("@actions/github");
+
 
 /***/ }),
 
