@@ -22,7 +22,7 @@ Click the `Use this Template` and provide the new repo details for your action
 ### `branch`
   destination branch   
   default: `master`
-### `docsify-args`
+### `docsify_args`
   extra docsify-cli arguments   
 ### `commit_msg`
   commit message used when pushing to destination branch     
