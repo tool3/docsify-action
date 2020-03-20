@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tool3/docsify-action.git"
+    "url": "tool3/docsify-action"
   },
   "keywords": [
     "github-action",
