@@ -7,7 +7,7 @@ Click the `Use this Template` and provide the new repo details for your action
 # Usage 
 `docsify-action` allows you to quickly create beautiful docs from your existing `README` file.
 ```yaml
-- uses: tool3/docsify-action@v1
+- uses: tool3/docsify-action@master
   with:
     github_token: ${{ secrets.GP_TOKEN }}
 ```
