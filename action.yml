@@ -21,6 +21,8 @@ runs:
   using: "composite"
   steps:
     - uses: actions/github-script@v7
+      with:
+        script: return context
 branding:
   icon: "book-open"
   color: "purple"
