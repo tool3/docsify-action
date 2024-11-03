@@ -4,10 +4,10 @@ import { exec } from '@actions/exec';
 
 async function run() {
   try {
-    const { payload } = github.context;
     setOutput('context', github.context)
     console.log('context', github.context)
     console.log(JSON.stringify(github.context));
+    const { payload } = github.context;
     type Args = Record<string, string>;
 
     const args: Args = {};
