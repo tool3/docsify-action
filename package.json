@@ -1,6 +1,6 @@
 {
   "name": "docsify-action",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "description": "publish to npm/github registries",
   "main": "index.js",
   "scripts": {
