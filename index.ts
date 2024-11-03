@@ -1,10 +1,13 @@
-import { setFailed, getInput } from '@actions/core';
+import { setFailed, getInput, setOutput } from '@actions/core';
 import github from '@actions/github';
 import { exec } from '@actions/exec';
 
 async function run() {
   try {
     const { payload } = github.context;
+    setOutput('context', github.context)
+    console.log('context', github.context)
+    console.log(JSON.stringify(github.context));
     type Args = Record<string, string>;
 
     const args: Args = {};

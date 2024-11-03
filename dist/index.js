@@ -31969,6 +31969,9 @@ const exec_1 = __nccwpck_require__(5236);
 async function run() {
     try {
         const { payload } = github_1.default.context;
+        (0, core_1.setOutput)('context', github_1.default.context);
+        console.log('context', github_1.default.context);
+        console.log(JSON.stringify(github_1.default.context));
         const args = {};
         // get input credentials
         const inputUser = (0, core_1.getInput)('user');
