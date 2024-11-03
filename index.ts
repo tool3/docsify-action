@@ -1,11 +1,13 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const { exec } = require('@actions/exec');
+import core from '@actions/core';
+import github from '@actions/github';
+import { exec } from '@actions/exec';
 
 async function run() {
   try {
     const { payload } = github.context;
-    const args = {};
+    type Args = Record<string, string>;
+
+    const args: Args = {};
 
     // get input credentials
     const inputUser = core.getInput('user');

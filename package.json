@@ -1,13 +1,13 @@
 {
   "name": "docsify-action",
-  "version": "1.0.3",
+  "version": "1.5.0",
   "description": "publish to npm/github registries",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint index.js",
-    "package": "ncc build index.js -o dist",
-    "test": "eslint index.js && jest",
-    "build": "ncc build index.js"
+    "lint": "eslint index.ts",
+    "package": "ncc build index.ts -o dist",
+    "test": "eslint index.ts && jest",
+    "build": "tsc && NODE_OPTIONS=--openssl-legacy-provider ncc build index.ts"
   },
   "repository": {
     "type": "git",
@@ -27,13 +27,14 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
-    "@actions/github": "^6.0.0"
+    "@actions/github": "^6.0.0",
+    "@vercel/ncc": "0.38.2"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.3",
     "eslint": "^8.57.0",
     "husky": "^9.1.6",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "typescript": "5.6.3"
   },
   "husky": {
     "hooks": {
