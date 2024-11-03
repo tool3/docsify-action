@@ -1,24 +1,28 @@
-name: 'docsify-action'
-description: 'create beautiful docs from README'
-author: 'Tal Hayut'
+name: "docsify-action"
+description: "create beautiful docs from README"
+author: "Tal Hayut"
+
 inputs:
-  github_token:  
-    description: 'github access token'
+  github_token:
+    description: "github access token"
     required: true
-  dir:  
-    description: 'destination dir'
-    default: 'docs'
-  branch:  
-    description: 'destination branch'
-    default: 'master'
-  docsify_args:  
-    description: 'docsify-cli args'
+  dir:
+    description: "destination dir"
+    default: "docs"
+  branch:
+    description: "destination branch"
+    default: "master"
+  docsify_args:
+    description: "docsify-cli args"
   commit_msg:
-    description: 'commit message used when pushing'
-    default: 'docs update 📚'
+    description: "commit message used when pushing"
+    default: "docs update 📚"
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "composite"
+  steps:
+    - uses: actions/github-script@v7
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
 branding:
-  icon: 'book-open'
-  color: 'purple'
+  icon: "book-open"
+  color: "purple"
