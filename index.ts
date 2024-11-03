@@ -4,7 +4,6 @@ import { exec } from '@actions/exec';
 
 async function run() {
   try {
-    console.log(process.env);
     const { payload } = github.context;
     type Args = Record<string, string>;
 

@@ -46,4 +46,4 @@ jobs:
 
 # Github Pages
 instruct `github pages` to serve docs from `master` docs directory through your repository settings.   
-Now you have self updating docs ! :smile:
+Now you have self updating docs !
