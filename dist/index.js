@@ -31963,7 +31963,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__nccwpck_require__(7484));
+const core_1 = __nccwpck_require__(7484);
 const github_1 = __importDefault(__nccwpck_require__(3228));
 const exec_1 = __nccwpck_require__(5236);
 async function run() {
@@ -31971,8 +31971,8 @@ async function run() {
         const { payload } = github_1.default.context;
         const args = {};
         // get input credentials
-        const inputUser = core_1.default.getInput('user');
-        const inputEmail = core_1.default.getInput('email');
+        const inputUser = (0, core_1.getInput)('user');
+        const inputEmail = (0, core_1.getInput)('email');
         if (payload.head_commit) {
             args.email = payload.head_commit.committer.email;
             args.username = payload.head_commit.committer.username;
@@ -31983,13 +31983,13 @@ async function run() {
         const userEmail = inputEmail || email;
         if (!userName || !userEmail) {
             const errorMessage = `failed to extract username or email from github context, please provide 'username' and 'email' through the workflow file.`;
-            return core_1.default.setFailed(errorMessage);
+            return (0, core_1.setFailed)(errorMessage);
         }
         // get input
-        const destinationDir = core_1.default.getInput('dir');
-        const docsifyArgs = core_1.default.getInput('docsify_args');
-        const commitMsg = core_1.default.getInput('commit_msg');
-        const destBranch = core_1.default.getInput('branch');
+        const destinationDir = (0, core_1.getInput)('dir');
+        const docsifyArgs = (0, core_1.getInput)('docsify_args');
+        const commitMsg = (0, core_1.getInput)('commit_msg');
+        const destBranch = (0, core_1.getInput)('branch');
         const docsArgs = ['docsify-cli', 'init', destinationDir];
         if (docsifyArgs) {
             docsArgs.push(docsifyArgs);
@@ -32004,7 +32004,7 @@ async function run() {
         await (0, exec_1.exec)('git', ['push', 'origin', `HEAD:${destBranch}`]);
     }
     catch (error) {
-        core_1.default.setFailed(`Failed to publish ${error.message}`);
+        (0, core_1.setFailed)(`Failed to publish ${error.message}`);
     }
 }
 run();
